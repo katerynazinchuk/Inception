@@ -27,6 +27,19 @@ services:
     depends_on:
       - mariadb
     restart: unless-stopped
+  nginx:
+    container_name: nginx
+    build: requirements/nginx
+    image: nginx:inception
+    ports:
+       - "443:443"
+    volumes:
+       - wordpress_data:/var/www/html
+    networks:
+      - inception
+    depends_on:
+      - wordpress
+    restart: unless-stopped
 
 secrets:
   db_password:
