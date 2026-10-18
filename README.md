@@ -10,7 +10,7 @@ The goal of this project is to learn Docker and the basics of system administrat
 ### Prerequisites
 
 - A Linux virtual machine with Docker and Docker Compose installed
-- `make`
+- `make` and `openssl`
 - The domain `kzinchuk.42.fr` pointing to the local machine:
 
 ```bash
@@ -23,35 +23,26 @@ echo "127.0.0.1 kzinchuk.42.fr" | sudo tee -a /etc/hosts
    git clone <repository-url> inception
    cd inception
 ```
-2. Create `srcs/.env` (example values):
-```
-   DOMAIN_NAME=kzinchuk.42.fr
-   MYSQL_DATABASE=wordpress
-   MYSQL_USER=wpuser
-   WP_TITLE=Inception
-   WP_ADMIN_USER=your_admin_name
-   WP_ADMIN_EMAIL=admin@example.com
-   WP_USER=your_user_name
-   WP_USER_EMAIL=user@example.com
-```
-   The admin username must not contain "admin" or "administrator".
-
-3. Create the `secrets` directory and the secret files (see below):
-```bash
-   mkdir -p secrets
-```
-
-4. Build and start:
+2. Build and start:
 ```bash
    make
 ```
-5. Open `https://kzinchuk.42.fr` in a browser. The certificate is self-signed,
+   On the first run, `make` prepares everything that is not stored in the repository:
+   - creates `srcs/.env` from the template `srcs/.env.example`;
+   - generates random passwords in `secrets/`;
+   - creates the data directories in `/home/kzinchuk/data`.
+
+   Existing files are never overwritten.
+
+3. Open `https://kzinchuk.42.fr` in a browser. The certificate is self-signed,
    so the browser will show a warning: accept it to continue.
-   The admin panel is at `https://kzinchuk.42.fr/wp-admin`.
+   The admin panel is at `https://kzinchuk.42.fr/wp-admin`; the login is
+   `WP_ADMIN_USER` from `srcs/.env` and the password is `WP_ADMIN_PASSWORD`
+   from `secrets/credentials.txt`.
 
-### Secrets
+### Configuration and secrets
 
-Credentials are not stored in the repository. Before the first run, create:
+Credentials are not stored in the repository. `make` generates them if they are missing:
 
 - `secrets/db_password.txt` — password of the WordPress database user
 - `secrets/db_root_password.txt` — password of the MariaDB root user
@@ -61,10 +52,11 @@ Credentials are not stored in the repository. Before the first run, create:
   WP_USER_PASSWORD=...
 ```
 
-Passwords can be generated with:
-```bash
-openssl rand -hex 12
-```
+Non-secret settings (domain, database name, user names) are in `srcs/.env`,
+created from `srcs/.env.example`.
+
+To use your own values, create or edit these files **before the first** `make`:
+passwords are applied only when the database and the site are created for the first time.
 
 ### Usage
 
@@ -145,7 +137,6 @@ Docker secrets are provided as files in `/run/secrets/`, and only to the contain
 that need them: nginx receives no passwords at all, and wordpress does not receive
 the database root password. Their content does not appear in `docker inspect`.
 Neither the secrets nor `.env` are stored in the git repository.
-Docker Network vs Host Network
 
 ### Docker Network vs Host Network
 
@@ -177,8 +168,10 @@ named volumes, while the files physically live in the required directory.
 - [NGINX documentation](https://nginx.org/en/docs/)
 - [PHP-FPM configuration](https://www.php.net/manual/en/install.fpm.configuration.php)
 - [The Missing Semester of Your CS Education (MIT)](https://missing.csail.mit.edu/)
+
 ### Use of AI
 
+AI (Claude) was used as a mentor throughout the project:
 - **Explaining concepts**: images and containers, layers, volumes, secrets,
   networks, PID 1, TLS, FastCGI.
 - **Building the services**: together with AI, step by step each service was first
