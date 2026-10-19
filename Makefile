@@ -1,5 +1,5 @@
 COMPOSE  = docker compose -f srcs/docker-compose.yml
-DATA_DIR = /home/kzinchuk/data
+DATA_DIR = /home/$(USER)/data
 ENV_FILE = srcs/.env
 SECRETS  = secrets/db_password.txt secrets/db_root_password.txt secrets/credentials.txt
 
