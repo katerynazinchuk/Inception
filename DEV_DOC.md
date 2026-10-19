@@ -79,13 +79,16 @@ Each secret is mounted only into the containers that need it, as a file in
 
 ### Using a different login
 
-The login `kzinchuk` appears in several places. To run the project under another
-login, update:
-- `DATA_DIR` in the `Makefile`
-- the `device:` paths of both volumes in `srcs/docker-compose.yml`
+The data path follows the current user automatically: the Makefile uses
+`/home/$(USER)/data` and `docker-compose.yml` uses `/home/${USER}/data`.
+Do not run `make` with `sudo`, otherwise `USER` becomes `root` and the data
+path changes to `/home/root/data`.
+
+The domain still contains the login `kzinchuk`. To change it, update:
 - `server_name` in `srcs/requirements/nginx/conf/nginx.conf`
 - the certificate subject (`-subj "/CN=..."`) in `srcs/requirements/nginx/Dockerfile`
-- `DOMAIN_NAME` in `srcs/.env` and the line in `/etc/hosts`
+- `DOMAIN_NAME` in `srcs/.env` (and `srcs/.env.example`) and the line in `/etc/hosts`
+
 
 ## Building and launching
 
