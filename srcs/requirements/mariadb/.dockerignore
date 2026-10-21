@@ -1,0 +1,13 @@
+# Docker build files
+Dockerfile
+.dockerignore
+
+# Secrets, never needed inside an image
+.env
+secrets
+
+# Documentation and editor/system files
+*.md
+*.swp
+*~
+.DS_Store
