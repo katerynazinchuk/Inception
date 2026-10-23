@@ -119,7 +119,7 @@ On later starts, each step that was already done is skipped.
 | `docker exec -it <service> bash` | Open a shell inside a running container |
 | `docker compose -f srcs/docker-compose.yml up --build -d <service>` | Rebuild and restart only one service |
 | `docker volume ls` | List volumes |
-| `docker volume inspect srcs_mariadb_data` | Show details of a volume, including its host path |
+| `docker volume inspect inception_mariadb_data` | Show details of a volume, including its host path |
 | `docker exec -it mariadb mariadb -u root -p` | Connect to the database as root |
 | `docker exec wordpress wp user list --path=/var/www/html --allow-root` | List WordPress users |
 
